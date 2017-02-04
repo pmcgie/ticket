@@ -1,56 +1,71 @@
 package com.company;
 
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedList;
 
 public class TicketManager {
 
-    public static void main(String[] args) {
+    LinkedList<Ticket> ticketQueue = new LinkedList<Ticket>();
 
-        LinkedList<Ticket> ticketQueue = new LinkedList<Ticket>();
+    private void mainMenu() {
 
-        Scanner scan = new Scanner(System.in);
+        while (true) {
 
-        while(true){
+            //TODO problem 4 - add two new options: Delete by Issue and Search by Issue
+            System.out.println("1. Enter Ticket\n2. Delete Ticket by ID\n3. Display All Tickets\n4. Quit");
 
-            System.out.println("1. Enter Ticket\n2. Delete Ticket\n3. Display All Tickets\n4. Quit");
-            int task = Integer.parseInt(scan.nextLine());
+            int task = Input.getPositiveIntInput("Enter your selection");
 
             if (task == 1) {
-                //Call addTickets, which will let us enter any number of new tickets
-                addTickets(ticketQueue);
-
-            } else if (task == 2) {
-                //delete a ticket
-                deleteTicket(ticketQueue);
-
-            } else if ( task == 4 ) {
-                //Quit. Future prototype may want to save all tickets to a file
+                addTickets();
+            }
+            else if (task == 2) {
+                deleteTicketById();
+            }
+            else if (task == 3) {
+                printAllTickets();
+            }
+            else if ( task == 4 ) {
                 System.out.println("Quitting program");
+                // TODO Problem 7 save all open tickets, and today's resolved tickets, to a file
                 break;
             }
             else {
                 //this will happen for 3 or any other selection that is a valid int
-                //TODO Program crashes if you enter anything else - please fix
                 //Default will be print all tickets
-                printAllTickets(ticketQueue);
+                printAllTickets();
             }
         }
-
-        scan.close();
-
     }
 
-    protected static void deleteTicket(LinkedList<Ticket> ticketQueue) {
-        printAllTickets(ticketQueue);   //display list for user
+
+
+    protected void searchDescription(String searchString) {
+        // TODO problem 3: complete this method - it should return a
+        // list of the tickets that contain the searchString in the description.
+    }
+
+
+    protected void searchByIssue() {
+        // TODO problem 4 implement this method
+    }
+
+
+    protected void deleteTicketByIssue() {
+        // TODO problem 5 implement this method
+    }
+
+
+    protected void deleteTicketById() {
+
+        printAllTickets();   //display list for user
 
         if (ticketQueue.size() == 0) {    //no tickets!
             System.out.println("No tickets to delete!\n");
             return;
         }
 
-        Scanner deleteScanner = new Scanner(System.in);
-        System.out.println("Enter ID of ticket to delete");
-        int deleteID = deleteScanner.nextInt();
+        int deleteID = Input.getPositiveIntInput("Enter ID of ticket to delete");
 
         //Loop over all tickets. Delete the one with this ticket ID
         boolean found = false;
@@ -59,54 +74,49 @@ public class TicketManager {
                 found = true;
                 ticketQueue.remove(ticket);
                 System.out.println(String.format("Ticket %d deleted", deleteID));
-                break; //don't need loop any more.
+                break; //don't need the loop any more.
             }
         }
         if (!found) {
             System.out.println("Ticket ID not found, no ticket deleted");
-            //TODO – re-write this method to ask for ID again if not found
+            //TODO Problem 2 re-write this method to ask for ID again if not found
         }
-        printAllTickets(ticketQueue);  //print updated list
+        printAllTickets();  //print updated list
 
     }
 
 
-    protected static void addTickets(LinkedList<Ticket> ticketQueue) {
-        Scanner sc = new Scanner(System.in);
-        boolean moreProblems = true;
-        String description, reporter;
-        Date dateReported = new Date(); //Default constructor creates Date with current date/time
-        int priority;
+    protected void addTickets() {
 
-        while (moreProblems){
-            System.out.println("Enter problem");
-            description = sc.nextLine();
-            System.out.println("Who reported this issue?");
-            reporter = sc.nextLine();
-            System.out.println("Enter priority of " + description);
-            priority = Integer.parseInt(sc.nextLine());
+        while (true) {
+
+            Date dateReported = new Date(); //Default constructor creates Date with current date/time
+
+            String description = Input.getStringInput("Enter problem");
+            String reporter = Input.getStringInput("Who reported this issue?");
+            int priority = Input.getPositiveIntInput("Enter priority of " + description);
 
             Ticket t = new Ticket(description, priority, reporter, dateReported);
             //ticketQueue.add(t);
-            addTicketInPriorityOrder(ticketQueue, t);
+            addTicketInPriorityOrder(t);
 
-            printAllTickets(ticketQueue);
+            printAllTickets();
 
-            System.out.println("More tickets to add?");
-            String more = sc.nextLine();
+            String more = Input.getStringInput("More tickets to add? Enter N for no, anything else to add more tickets");
+
             if (more.equalsIgnoreCase("N")) {
-                moreProblems = false;
+                return;
             }
         }
     }
 
 
-    protected static void addTicketInPriorityOrder(LinkedList<Ticket> tickets, Ticket newTicket){
+    protected void addTicketInPriorityOrder(Ticket newTicket){
 
         //Logic: assume the list is either empty or sorted
 
-        if (tickets.size() == 0 ) {//Special case - if list is empty, add ticket and return
-            tickets.add(newTicket);
+        if (ticketQueue.size() == 0 ) {//Special case - if list is empty, add ticket and return
+            ticketQueue.add(newTicket);
             return;
         }
 
@@ -115,30 +125,43 @@ public class TicketManager {
 
         int newTicketPriority = newTicket.getPriority();
 
-        for (int x = 0; x < tickets.size() ; x++) {    //use a regular for loop so we know which element we are looking at
+        for (int x = 0; x < ticketQueue.size() ; x++) {    //use a regular for loop so we know which element we are looking at
 
             //if newTicket is higher or equal priority than the this element, add it in front of this one, and return
-            if (newTicketPriority >= tickets.get(x).getPriority()) {
-                tickets.add(x, newTicket);
+            if (newTicketPriority >= ticketQueue.get(x).getPriority()) {
+                ticketQueue.add(x, newTicket);
                 return;
             }
         }
 
         //Will only get here if the ticket is not added in the loop
         //If that happens, it must be lower priority than all other tickets. So, add to the end.
-        tickets.addLast(newTicket);
+        ticketQueue.addLast(newTicket);
     }
 
 
-    protected static void printAllTickets(LinkedList<Ticket> tickets) {
+    protected void printAllTickets() {
         System.out.println(" ------- All open tickets ----------");
 
-        for (Ticket t : tickets ) {
-            System.out.println(t); //Write a toString method in Ticket class
-            //println will try to call toString on its argument
+        for (Ticket t : ticketQueue ) {
+            System.out.println(t); // This calls the  toString method for the Ticket object.
         }
         System.out.println(" ------- End of ticket list ----------");
 
     }
+
+
+    /* Main is hiding down here. Create a TicketManager object, and call the mainMenu method.
+    Avoids having to make all of the methods in this class static. */
+    public static void main(String[] args) {
+        TicketManager manager = new TicketManager();
+
+        //TODO problem 8 load open tickets from a file
+
+        //TODO Problem 9 how will you know what ticket ID to start with?
+
+        manager.mainMenu();
+    }
+
 }
 
