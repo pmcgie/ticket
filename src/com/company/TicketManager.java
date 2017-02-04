@@ -39,20 +39,31 @@ public class TicketManager {
     }
 
 
-
-    protected void searchDescription(String searchString) {
+    protected LinkedList<Ticket> searchDescription(String searchString) {
         // TODO problem 3: complete this method - it should return a
         // list of the tickets that contain the searchString in the description.
+        // Return an empty list if there are no matching Tickets.
+        // The search should be case-insensitive
+
+        return null;  //replace this with a return statement that returns a list
     }
 
 
     protected void searchByIssue() {
-        // TODO problem 4 implement this method
+        // TODO problem 4 implement this method. Return a list of matching tickets.
+
+        // Ask user for search term
+        // Use searchDescription() method to get list of matching Tickets
+        // display list
     }
 
 
     protected void deleteTicketByIssue() {
         // TODO problem 5 implement this method
+        // Ask user for string to search for
+        // Use searchDescription to create list of matching Tickets
+        // Ask for ID of ticket to delete
+        // Delete that ticket
     }
 
 
