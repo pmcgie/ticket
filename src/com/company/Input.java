@@ -11,7 +11,7 @@ import java.util.Scanner;
  *
  * into
  *
- * String text = input.
+ * String text = Input.getStringInput("Please enter the text");
  */
 
 public class Input {
