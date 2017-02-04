@@ -18,10 +18,6 @@ public class Input {
 
     private static Scanner scanner = new Scanner(System.in);   //Global scanner used for all input
 
-    public static int getPositiveIntInput() {
-        return getPositiveIntInput(null);
-    }
-
     public static int getPositiveIntInput(String question) {
 
         if (question != null) {
@@ -40,36 +36,6 @@ public class Input {
                 System.out.println("Please type a positive number");
             }
         }
-    }
-
-
-    public static double getPositiveDoubleInput() {
-        return getPositiveDoubleInput(null);
-    }
-
-    public static double getPositiveDoubleInput(String question) {
-
-        if (question != null) {
-            System.out.println(question);
-        }
-        while (true) {
-            try {
-                String stringInput = scanner.nextLine();
-                double doubleInput = Double.parseDouble(stringInput);
-                if (doubleInput >= 0) {
-                    return doubleInput;
-                } else {
-                    System.out.println("Please enter a positive number");
-                }
-            } catch (NumberFormatException nfe) {
-                System.out.println("Please type a positive number");
-            }
-        }
-    }
-
-
-    public static String getStringInput() {
-        return getStringInput(null);
     }
 
     public static String getStringInput(String question) {
