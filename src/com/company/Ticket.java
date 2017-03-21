@@ -4,10 +4,10 @@ import java.util.Date;
 
 public class Ticket {
 
-    private int priority;
-    private String reporter; //Stores person or department who reported issue
-    private String description;
-    private Date dateReported;
+    int priority;
+    protected String reporter; //Stores person or department who reported issue
+    protected String description;
+    protected Date dateReported;
 
     //TODO Problem 1: explain the role of ticketIdCounter and ticketID
 
@@ -36,13 +36,37 @@ public class Ticket {
         return priority;
     }
 
-    public int getTicketID() {
+    protected int getTicketID() {
         return ticketID;
     }
 
     public String toString(){
         return("ID: " + this.ticketID + " Issue: " + this.description + " Priority: " + 					this.priority + " Reported by: "
                 + this.reporter + " Reported on: " + this.dateReported);
+    }
+
+    public Date getDateReported() {
+        return dateReported;
+    }
+
+    public void setDateReported(Date dateReported) {
+        this.dateReported = dateReported;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getReporter() {
+        return reporter;
+    }
+
+    public void setReporter(String reporter) {
+        this.reporter = reporter;
     }
 }
 
